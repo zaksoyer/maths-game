@@ -22,6 +22,10 @@ The database engine is to be determinated.. but Fireabse looks the one..
 
 This is the first game I'm creating.  I want eventually my game to become an app and, for now, I can't develop an app (Rick would be pleased to leave me alone with Glootie..) I'm working on upgrading my 6 GiGs of RAM to 16 so being able to run the development tools.  Meanwhile, I'm working on the generators and a basic web interface (no skin) to make the game works.
 
+### Philosopy
+
+You can't really lose at this game.  Other then quit and reset your game, it's always possible ton continue further by doing a test correctly.
+
 ### Rules
 
 * Each round is presented like a tests, maximum 6 questions for beginners, 12 questions for intermediates and 15 for advanced level.
@@ -38,10 +42,6 @@ For both : intermediate and advanced, in case of a wrong answer the time left WO
 * Build a file with stats
 * Send results to a registered mentor/teacher
 * Groups in which admins can create special tests for specific player
-
-### Philosopy
-
-You can't really lose at this game.  Other then quit and reset your game, it's always possible ton continue further by doing a test correctly.
 
 ***
 
