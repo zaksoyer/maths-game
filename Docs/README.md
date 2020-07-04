@@ -48,7 +48,8 @@ For both : intermediate and advanced, in case of a wrong answer the time left WO
 
 # Now..
 
-Currently creating a TypeScript object as prototype for the maths engine.
+* Collecting datas/ideas
+* Creating a TypeScript object as prototype for the maths engine.
 
 # Join the team
 
