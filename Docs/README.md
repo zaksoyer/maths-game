@@ -40,10 +40,15 @@ For both : intermediate and advanced, in case of a wrong answer the time left WO
 
 ### Features
 * Build a file with stats
-* Send results to a registered mentor/teacher
+* Send results to a registered mentor/teacher, to email, ...
+* Share scores on social networks
 * Groups in which admins can create special tests for specific player
 
 ***
+
+# Now..
+
+Currently creating a TypeScript object as prototype for the maths engine.
 
 # Join the team
 
