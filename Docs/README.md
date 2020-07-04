@@ -56,6 +56,7 @@ Wanna join? Just ask!  No HQ for now, but a lot of tools to communicate.
 # Definitions
 
 **Errorlevel** : numeric exit code that represent a result; state (success/failed) a warning, an error, ..
+
 **Maths table** : series of maths operations from 0 to 12. Ex. ; 0 + 0 = 0, 0 + 1 = 1 .. 0 + 12 = 12
 
 ***
