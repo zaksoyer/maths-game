@@ -6,12 +6,12 @@ type Errorlevel = number;
 
 /**
  * @public @readonly
- * @interface _MathsEngine representing the math engine class/object.
+ * @interface _MathEngine representing the math engine class/object.
  * @version   0.0.1bravo 2020-05-03
  * 
- * @todo implement in class
+ * @todo generateOperations Promise ANY?
  */
-interface _MathsEngine {
+interface _MathEngine {
   isAccessible        :boolean;
   generateOperations  :(level? :number) => Promise<any>;
   generateMathsTables :() => Promise<Errorlevel>;
@@ -26,7 +26,7 @@ interface _MathsTable {
   id              :number;
   operand_1       :number;
   operand_2       :number;
-  max_difficulty  :number;  //Maximum difficulty level
+  min_difficulty  :number;  //Minimum difficulty level
   answer          :number;
 }
 
@@ -40,4 +40,4 @@ interface _OperationList {
   operation :number;  // Relation to _MathsTable.is
 }
 
-export { _MathsEngine, _MathsTable, _OperationList, Errorlevel };
+export { _MathEngine, _MathsTable, _OperationList, Errorlevel };

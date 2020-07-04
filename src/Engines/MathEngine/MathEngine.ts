@@ -1,6 +1,6 @@
 
 // Loading from custom modules //
-import { _MathsEngine, _MathsTable, _OperationList, Errorlevel } from './interfaces';
+import { _MathEngine, _MathsTable, _OperationList, Errorlevel } from './interfaces';
 
 // Initializing constant and variables //
 const _BEGINNER         :number = 1;  // Additions & substractions
@@ -21,13 +21,13 @@ const _OPERATIONS_MAX   :number = 12;
 
 const _SUCCESS  :number = 0;
 /**
- * @class       MathsEngine
+ * @class       MathEngine
  * @classdesc   this class is handling everything concerning the maths.
- * @implements  interface _MathsEngine
+ * @implements  interface _MathEngine
  * @version     0.0.1bravo 2020-07-01
  */
 
-class MathsEngine implements _MathsEngine {
+class MathEngine implements _MathEngine {
   private _mathsTables = new Map<number, _MathsTable>();
 
   constructor() { }
@@ -126,7 +126,7 @@ class MathsEngine implements _MathsEngine {
       switch(error) {
 
         default:
-          trapError('MathsEngine.generateMathsTables() ', error);
+          trapError('MathEngine.generateMathsTables() ', error);
       }
       
     }
@@ -203,4 +203,4 @@ async function trapError(where :string, error :any) :Promise<Errorlevel> {
   return Promise.resolve(SUCCES);
 }
 
-export { MathsEngine };
+export { MathEngine };

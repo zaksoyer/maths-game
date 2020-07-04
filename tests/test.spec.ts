@@ -1,13 +1,13 @@
 import 'mocha';
 import { expect } from 'chai';
 
-import { MathsEngine } from '../src/Engines/MathsEngine';
+import { MathEngine } from '../src/Engines/MathEngine';
 
-const mathsEngine = new MathsEngine();
+const MathEngine = new MathEngine();
 
-describe('MathsEngine object testing', () => {
+describe('MathEngine object testing', () => {
   it('is expected to get TRUE from getter isAccessible', () => {
-    expect(mathsEngine.isAccessible).to.be.true;
+    expect(MathEngine.isAccessible).to.be.true;
   });
 
   it(`is expected to return a list of 12 operations for bginners`)
