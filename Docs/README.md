@@ -44,12 +44,12 @@ You can't really lose at this game.  Other then quit and reset your game, it's a
 For both : intermediate and advanced, in case of a wrong answer the time left WON'T be cumulated.
 
 ### Features
-* Build a file with stats
-* Send results to 
+* Build player/game stats
+* Send results/stats to 
   * A registered mentor/teacher
   * A personal email
 * Share scores on social networks
-* Groups in which admins can create special tests for specific player
+* Groups in which admins can create special tests for specific players
 
 ***
 
