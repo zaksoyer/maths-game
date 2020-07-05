@@ -80,6 +80,10 @@ Wanna join? Just ask and create a branch!!  No HQ for now, but a lot of tools to
 **Math table** : series of maths operations from 0 to 12. Ex. ; 0 + 0 = 0, 0 + 1 = 1 .. 0 + 12 = 12
 
 ***
+Version 1.1.0
+July 5th 2020
+Zak Soyer
+***
 Version 1.0.0
 4th of July 2020
 Zak Soyer
