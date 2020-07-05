@@ -1,4 +1,4 @@
-import { Errorlevel } from '../cust_modules/types';
+import { Errorlevel } from '../Custom_Modules/types';
 /**
  * @public @readonly
  * @class      Errorlevels.

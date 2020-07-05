@@ -1,8 +1,13 @@
 
+/**
+ * 
+ * @todo RENAME constant _CHOICES_MIN
+ */
 // Loading from custom modules //
+import { Errorlevels }  from '../../Classes'
+import { Errorlevel }   from '../../Custom_Modules/types';
+
 import { _MathEngine, _MathTable, _OperationList } from './interfaces';
-import { Errorlevels } from '../../Classes'
-import { Errorlevel } from '../../cust_modules/types';
 
 // Initializing constant and variables //
 const _BEGINNER         :number = 1;  // Additions & substractions
@@ -14,7 +19,7 @@ const _SUBSTRACTION     :number = 2;
 const _MULTIPLICATION   :number = 3;
 const _DIVISION         :number = 4;
 
-const _CHOICES_MIN      :number = 2;  // _CHOICE_MIN + Good Answer
+const _CHOICES_MIN      :number = 2;  // _CHOICE_MIN + Good Answer 
 const _TABLE_MIN        :number = 0;
 const _TABLE_MAX        :number = 12;
 
@@ -27,7 +32,7 @@ const SUCCESS = EXIT.Success;
 /**
  * @class       MathEngine
  * @classdesc   this class is handling everything concerning the maths.
- * @implements  interface _MathEngine
+ * @implements  module's interface _MathEngine
  * @version     0.0.1bravo 2020-07-01
  */
 
