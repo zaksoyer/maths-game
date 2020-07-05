@@ -1,16 +1,18 @@
 
 // Loading from custom modules //
-import { _MathEngine, _MathsTable, _OperationList, Errorlevel } from './interfaces';
+import { _MathEngine, _MathTable, _OperationList } from './interfaces';
+import { Errorlevels } from '../../Classes'
+import { Errorlevel } from '../../cust_modules/types';
 
 // Initializing constant and variables //
 const _BEGINNER         :number = 1;  // Additions & substractions
 const _INTERMEDIATE     :number = 2;  // Multiplication and divisions
 const _ADVANCED         :number = 3;  // All
 
-const _ADDITION         :number = 0;
-const _SUBSTRACTION     :number = 1;
-const _MULTIPLICATION   :number = 2;
-const _DIVISION         :number = 3;
+const _ADDITION         :number = 1;
+const _SUBSTRACTION     :number = 2;
+const _MULTIPLICATION   :number = 3;
+const _DIVISION         :number = 4;
 
 const _CHOICES_MIN      :number = 2;  // _CHOICE_MIN + Good Answer
 const _TABLE_MIN        :number = 0;
@@ -19,7 +21,9 @@ const _TABLE_MAX        :number = 12;
 const _OPERATIONS_MIN   :number = 0;
 const _OPERATIONS_MAX   :number = 12;
 
-const _SUCCESS  :number = 0;
+const EXIT    = new Errorlevels();
+const SUCCESS = EXIT.Success;
+
 /**
  * @class       MathEngine
  * @classdesc   this class is handling everything concerning the maths.
@@ -28,9 +32,7 @@ const _SUCCESS  :number = 0;
  */
 
 class MathEngine implements _MathEngine {
-  private _mathsTables = new Map<number, _MathsTable>();
-
-  constructor() { }
+  private _MathTables = new Map<number, _MathTable>();
 
   /**
    * @public @property
@@ -71,7 +73,6 @@ class MathEngine implements _MathEngine {
    * 
    */
   async generateAnswers(strike :number, amount :number = _CHOICES_MIN) {
-    const SUCCESS = _SUCCESS;
 
     try {
       return Promise.resolve(SUCCESS);
@@ -83,7 +84,7 @@ class MathEngine implements _MathEngine {
 
   /**
    * @public @async
-   * @method      generateMathsTables generating all maths tables for the game.
+   * @method      generateMathTables generating all maths tables for the game.
    * @version     0.0.1bravo 2020-07-03
    * @returns     Promise object with SUCCESS
    */
@@ -103,30 +104,29 @@ class MathEngine implements _MathEngine {
    *                Terminate program's execution
    * 
    */
-  async generateMathsTables() :Promise<Errorlevel> {
-    const MATHSTABLES     = this._mathsTables;
+  async generateMathTables() :Promise<Errorlevel> {
+    const MathTables      = this._MathTables;
 
     const OPERATIONS_MIN  = _OPERATIONS_MIN;
     const OPERATIONS_MAX  = _OPERATIONS_MAX;
     const TABLE_MIN       = _TABLE_MIN;
     const TABLE_MAX       = _TABLE_MAX;
 
-    const SUCCESS         = _SUCCESS;
-
     try {
-      for (let i :number = TABLE_MIN; i <= TABLE_MAX; i++) {
-        // Create Maths Table
-        for (let j :number = OPERATIONS_MIN; j <= OPERATIONS_MAX; j++) {
-          // Create maths operations
-        }
+      const table = 1;
+
+      for (let j :number = OPERATIONS_MIN; j <= OPERATIONS_MAX; j++) {
+        // Create maths operations
+        console.log(`${String(table)} + ${String(j)} = ${j + table}`);
       }
+
       return Promise.resolve(SUCCESS);
 
     } catch(error) {
       switch(error) {
 
         default:
-          trapError('MathEngine.generateMathsTables() ', error);
+          trapError('MathEngine.generateMathTables() ', error);
       }
       
     }
@@ -196,11 +196,10 @@ class MathEngine implements _MathEngine {
  * @returns Promise object containing an errorlevel exit code.
  */
 async function trapError(where :string, error :any) :Promise<Errorlevel> { 
-  const SUCCES = _SUCCESS;
 
   console.error(`UNEXPECTED ERROR IN ${where}`, error);
 
-  return Promise.resolve(SUCCES);
+  return Promise.resolve(SUCCESS);
 }
 
 export { MathEngine };
