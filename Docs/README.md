@@ -27,12 +27,14 @@ This is the first game I'm creating.  I want eventually my game to become an app
 
 ### Philosopy
 
-You can't really lose at this game.  Other then quit and reset your game, it's always possible ton continue further by doing a test correctly.
+You can't really lose at this game.  Other then quit and reset your game, it's always possible to continue further by succeeding to a test.
 
 ### Rules
 
+*These are based on the basic game rules.  Skin will be able to set some features and options to establish their own rules*
+
 * Each round is presented like a tests, maximum 6 questions for beginners, 12 questions for intermediates and 15 for advanced level.
-* To complete a round, the player must solve 5, 10 or 12 (depending on the difficulty level) maths operations correctly.
+* To complete a round, the player must solve 5, 10 or 12 (depending on the difficulty level) operations correctly.
 * A time limit can be assigned.
 * In the case of no time limit assigned, 
   * Beginners : player has 3 seconds to select the answer.
