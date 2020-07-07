@@ -8,8 +8,9 @@
 
 ### More
 
-The basic of this game is to answer maths problems as quick it's humanly possible.
-Starting with mental arithmetics, problem resolution will follow.
+* The basic of this game is to answer maths problems as quick it's humanly possible
+* Possibility to memorize and answer quickly over 2000 mental arithmetic questions
+* Problem resolutions are also on the plan..
 
 ### Second objective
 
@@ -79,6 +80,12 @@ Wanna join? Just ask and create a branch!!  No HQ for now, but a lot of tools to
 
 **Math table** : series of maths operations from 0 to 12. Ex. ; 0 + 0 = 0, 0 + 1 = 1 .. 0 + 12 = 12
 
+**Reversed question** : Type of question in which the answer is given to the player and the answer is the operation. Example : Question is 10; player has to chose bwtween a) 5 + 6, b) 11 - 2, c) 5 + 5.
+
+***
+*Version 1.2.0 -*
+*July 7th 2020 -*
+*Zak Soyer*
 ***
 *Version 1.1.0 -*
 *July 5th 2020 -*

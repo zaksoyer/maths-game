@@ -9,9 +9,11 @@ import { Errorlevel } from '../../Custom_Modules/types';
  */
 interface _MathEngine {
   isAccessible        :boolean;
-  generateRound       :(level :number, amount :number, strike :number) => Promise<any>;
-  generateMathTables  :() => Promise<Errorlevel>;
+  operatorsList       :number[],
   tables              :Map<number, _MathTable>;
+
+  generateRound       :(level :number, amount? :number, strike? :number) => Promise<any>;
+  generateMathTables  :() => Promise<Errorlevel>;
 }
 
 /**
@@ -20,8 +22,9 @@ interface _MathEngine {
  * @version   0.0.1bravo  2020-07-03
  */
 interface _MathTable {
-  query   :string;  // '1 + 1'
-  answer  :number;  // 2
+  difficulty  :number[];  // BEGINNER, INTERMEDIATE, ADVANCED, EXPERT
+  query       :string;  // '1 + 1'
+  answer      :number;  // 2
 }
 
 /**
