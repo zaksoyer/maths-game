@@ -10,5 +10,15 @@ describe('MathEngine object testing', () => {
     expect(mathEngine.isAccessible).to.be.true;
   });
 
-  it(`is expected to return a list of 12 operations for bginners`)
+  it(`is expected to SUCCESSFULLY generate a Map() OBJECT with all needed maths operations`, async () => {
+    mathEngine.generateMathTables()
+    .then(result => {
+      expect(result).to.equal(0);
+    });
+  });
+
+  it(`is expected to read 554 elements in the Math Tables list`, () => {
+    expect(mathEngine.tables.size).to.equal(554);
+  });
+  
 });

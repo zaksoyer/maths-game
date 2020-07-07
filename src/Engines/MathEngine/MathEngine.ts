@@ -7,7 +7,7 @@
 import { Errorlevels }  from '../../Classes'
 import { Errorlevel }   from '../../Custom_Modules/types';
 
-import { _MathEngine, _MathTable, _OperationList } from './interfaces';
+import { _MathEngine, _MathTable, _RoundList } from './interfaces';
 
 // Initializing constant and variables //
 const _BEGINNER         :number = 1;  // Additions & substractions
@@ -40,12 +40,23 @@ class MathEngine implements _MathEngine {
   private _MathTables = new Map<number, _MathTable>();
 
   /**
-   * @public @property
+   * @public @property @readonly
    * @summary used for testing purposes; let know if object is acessible.
+   * @version 0.0.1bravo 2020-07-05.
    * @returns true if property has been read.
    */
-  get isAccessible() {
+  get isAccessible() :boolean {
     return true;
+  }
+
+  /**
+   * @public @property @readonly
+   * @summary returns the complete maths tables needed for the game.
+   * @version 0.0.1bravo 2020-07-07.
+   * @returns Map<number, _MathTable> object.
+   */
+  get tables() {
+    return this._MathTables;
   }
 
   /**
@@ -54,7 +65,7 @@ class MathEngine implements _MathEngine {
    * @version 0.0.1bravo 2020-07-03
    * 
    * @param amount a number representing the amount of answers wanted (default 3)
-   * @param strike the answer to flag as the good answer.
+   * @param answer the answer to flag as the good answer.
    * @returns Promise object with a list of possible answers for the operation.
    */
   /*
@@ -77,7 +88,7 @@ class MathEngine implements _MathEngine {
    *                Terminate program's execution
    * 
    */
-  async generateAnswers(strike :number, amount :number = _CHOICES_MIN) {
+  async generateAnswers(answer :number, amount :number = _CHOICES_MIN) {
 
     try {
       return Promise.resolve(SUCCESS);
@@ -94,9 +105,12 @@ class MathEngine implements _MathEngine {
    * @returns     Promise object with SUCCESS
    */
   /*
-   * Processing : This subroutine's generating all the maths tables used during the game.
-   *              The operations list manager will use these tables to select operations
-   *              of the round.
+   * Processing : Generate each addition, substraction, multiplication and division from
+   *              0 to 12 (subject to change) operation and answer, returning a integer
+   *              number.  The operations are stored and used all along the game.
+   * 
+   *              The operations list manager will use this list to select the operations
+   *              for a round.
    *
    * Exceptions : When programming error
    *                Print error messages
@@ -112,21 +126,66 @@ class MathEngine implements _MathEngine {
   async generateMathTables() :Promise<Errorlevel> {
     const MathTables      = this._MathTables;
 
+    const ADDITION        = _ADDITION;
+    const SUBSTRACTION    = _SUBSTRACTION;
+    const MULTIPLICATION  = _MULTIPLICATION;
+    const DIVISION        = _DIVISION;
+    const OPERATIONS      = [ADDITION, SUBSTRACTION, MULTIPLICATION, DIVISION]
+
     const OPERATIONS_MIN  = _OPERATIONS_MIN;
     const OPERATIONS_MAX  = _OPERATIONS_MAX;
     const TABLE_MIN       = _TABLE_MIN;
     const TABLE_MAX       = _TABLE_MAX;
 
     try {
-      const table = 1;
+      let keyIndex = 1;
+      let op :_MathTable = { query: ``, answer: 0};
 
-      for (let j :number = OPERATIONS_MIN; j <= OPERATIONS_MAX; j++) {
-        // Create maths operations
-        console.log(`${String(table)} + ${String(j)} = ${j + table}`);
+      for (let i :number = TABLE_MIN; i <= TABLE_MAX; i++) {
+        
+        for (const operator of OPERATIONS) {
+          
+          for (let j :number = OPERATIONS_MIN; j <= OPERATIONS_MAX; j++) {
+
+            // Create maths operations
+            switch(operator) {
+              case ADDITION:
+                op.query  = `${String(i)} + ${String(j)}`;
+                op.answer = i + j;
+              break;
+
+              case SUBSTRACTION:
+                const sub = i - j;
+                //if (Math.sign(sub) >= 0) { 
+                  op.query  = `${String(i)} - ${String(j)}`;
+                  op.answer = sub;
+                //}
+              break;
+
+              case MULTIPLICATION:
+                op.query  = `${String(i)} * ${String(j)}`;
+                op.answer = i * j;
+              break;
+
+              case DIVISION:
+                if((i % j) === 0) { 
+                  op.query  = `${String(i)} / ${String(j)}`;
+                  op.answer = i / j;
+                }
+              break;
+            }
+
+            if (op.query !== ``) {
+              MathTables.set(keyIndex, { query: op.query, answer: op.answer });
+              keyIndex++;
+              op.query = ``;
+            }
+          }
+        }
       }
 
       return Promise.resolve(SUCCESS);
-
+      
     } catch(error) {
       switch(error) {
 
@@ -139,10 +198,12 @@ class MathEngine implements _MathEngine {
 
   /**
    * @public @async
-   * @method  generateOperations generating arithmetic operations for a round.
+   * @method  generateRound generating arithmetic operations for a round.
    * @version 0.0.1a 2020-07-01
    * 
    * @param   level a number representing the difficulty level (Default Beginner A).
+   * @param   amount  a number reprsenting the amount of operation required.
+   * @param   strike  a number representing the number of strike a player has for this round.
    * @returns promise object with an array containing the list of operation.
    */
   /*
@@ -161,12 +222,12 @@ class MathEngine implements _MathEngine {
    *                Terminate program's execution
    * 
    */
-  async generateOperations(level :number = _BEGINNER) {
+  async generateRound(level :number, amount :number, strike :number) {
     const ADVANCED      = _ADVANCED, 
           BEGINNER      = _BEGINNER,
           INTERMEDIATE  = _INTERMEDIATE;          
 
-    let tables :_OperationList[] = [];
+    let tables :_RoundList[] = [];
 
     try {
       switch(level) {

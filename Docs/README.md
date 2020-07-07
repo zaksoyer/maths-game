@@ -33,15 +33,15 @@ You can't really lose at this game.  Other then quit and reset your game, it's a
 
 *These are based on the basic game rules.  Skin will be able to set some features and options to establish their own rules*
 
-* Each round is presented like a tests, maximum 6 questions for beginners, 12 questions for intermediates and 15 for advanced level.
+* Each round is presented like a tests, maximum 6 questions for beginners, 12 questions for intermediates and 15 for advanced and expert level.
 * To complete a round, the player must solve 5, 10 or 12 (depending on the difficulty level) operations correctly.
 * A time limit can be assigned.
 * In the case of no time limit assigned, 
   * Beginners : player has 3 seconds to select the answer.
   * Intermediates : player has 3 seconds to answer, time is cumulative until the end of the round
-  * Advanced : player has 2.5 seconds to answer, time is cumulative until the end of the round.  
+  * Advanced/Experts : player has 2.5 seconds to answer, time is cumulative until the end of the round.  
 
-For both : intermediate and advanced, in case of a wrong answer the time left WON'T be cumulated.
+For intermediate advanced and expert, in case of a wrong answer the time left WON'T be cumulated.
 
 ### Features
 * Build player/game stats
