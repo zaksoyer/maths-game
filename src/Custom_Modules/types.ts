@@ -10,6 +10,6 @@ type Errorlevel = number;
  * @public @readonly
  * @typedef DifficultyLevel representing the type of difficulty levels.
  */
-type DifficultyLevel = number;
+type DifficultyLevel = number; 
 
 export { DifficultyLevel, Errorlevel };
