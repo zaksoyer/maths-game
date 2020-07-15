@@ -1,5 +1,13 @@
 import { Errorlevel } from '../../Custom_Modules/types';
 
+interface _DifficultyLevels {
+  _BEGINNER       :number;
+  _INTERMEDIATE   :number;
+  _ADVANCED       :number;
+  _EXPERT         :number;
+  _NEGATIVE_ONLY  :number;  
+}
+
 /**
  * @public @readonly
  * @interface _MathEngine representing the math engine class/object.
@@ -9,11 +17,13 @@ import { Errorlevel } from '../../Custom_Modules/types';
  */
 interface _MathEngine {
   isAccessible        :boolean;
-  operatorsList       :number[],
-  tables              :Map<number, _MathTable>;
+  mathTablesSettings  :number[];
+  operatorsList       :number[];
+  totalOperations     :number;
 
-  generateRound       :(level :number, amount? :number, strike? :number) => Promise<any>;
+  generateRound       :(level :number, amount? :number) => Promise<any>;
   generateMathTables  :() => Promise<Errorlevel>;
+  getOperations       :(difficulty? :number) => Promise<any>;
 }
 
 /**
@@ -29,14 +39,26 @@ interface _MathTable {
 
 /**
  * @public @readonly
- * @interface _MathTablesList representing the math tables list structure.
- * @version   0.0.1bravo  2020-07-04
+ * @interface _MathTablesSettings representing the math tables setting structure.
+ * @version   0.0.1bravo  2020-07-08
  */
-interface _MathTablesList {
-  id            :number;  // 1
-  main_operand  :number;  // 0 to 12
-  operation     :number;  // Addition, substraction, ..
-  mathTable_id  :number;  // Relation with _MathTable.id
+interface _MathTablesSettings {
+  _OPERAND_FROM :number;
+  _OPERAND_TO   :number;
+  _TABLE_FROM   :number;
+  _TABLE_TO     :number;
+}
+
+/**
+ * @public @readonly
+ * @interface _OperatorsList representing the operators list structure.
+ * @version   0.0.1bravo  2020-07-08
+ */
+interface _OperatorsList {
+  _ADDITION       :number;
+  _SUBSTRACTION   :number;
+  _MULTIPLICATION :number;
+  _DIVISION       :number;
 }
 
 /**
@@ -50,4 +72,4 @@ interface _RoundList {
   operation :_MathTable;
 }
 
-export { _MathEngine, _MathTable, _MathTablesList, _RoundList };
+export { _DifficultyLevels, _MathEngine, _MathTable, _MathTablesSettings, _OperatorsList, _RoundList };
