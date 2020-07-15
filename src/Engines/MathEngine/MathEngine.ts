@@ -77,14 +77,15 @@ class MathEngine implements _MathEngine {
    * @public @property @readonly
    * @summary returns the handled difficulty levels list.
    * @version 0.0.1bravo  2020-07-13
-   * @returns [BEGINNER, INTERMEDIATE, ADVANCED, EXPERT] as number[]
+   * @returns [BEGINNER, INTERMEDIATE, ADVANCED, EXPERT, NEGATIVE_ONLY] as DifficultyLevel[]
    */
   get difficultyLevels () :DifficultyLevel[] {
     return [
       this._difficultyLevels._BEGINNER,
       this._difficultyLevels._INTERMEDIATE,
       this._difficultyLevels._ADVANCED,
-      this._difficultyLevels._EXPERT
+      this._difficultyLevels._EXPERT,
+      this._difficultyLevels._NEGATIVE_ONLY
     ];
   }
 
@@ -195,10 +196,10 @@ class MathEngine implements _MathEngine {
         
       } else {
         // A difficulty level was specified //
-        MathTables.forEach ((value, pos) => {
-          if (value.difficulty.includes(difficulty))
-          ops.set(pos, value);
-        });
+        for (const element of MathTables) {
+          if (element[1].difficulty.includes(difficulty))
+            ops.set(element[0], element[1]);
+        }
       }
       
       return Promise.resolve(ops);
@@ -276,9 +277,9 @@ class MathEngine implements _MathEngine {
     const MathTables    = this._MathTables;
     const OPERATORS     = this.operatorsList;
 
-    const [ADDITION, SUBSTRACTION, MULTIPLICATION, DIVISION]  = OPERATORS;
-    const [OPERAND_FROM, OPERAND_TO, TABLE_FROM, TABLE_TO]    = this.mathTablesSettings;
-    const [BEGINNER, INTERMEDIATE, ADVANCED, EXPERT]          = this.difficultyLevels;
+    const [ADDITION, SUBSTRACTION, MULTIPLICATION, DIVISION]    = OPERATORS;
+    const [OPERAND_FROM, OPERAND_TO, TABLE_FROM, TABLE_TO]      = this.mathTablesSettings;
+    const [BEGINNER, INTERMEDIATE, ADVANCED, EXPERT, NEGATIVE]  = this.difficultyLevels;
 
     let   keyIndex  = 1;
     let   op        = { difficulty: [], query: ``, answer: 0};
@@ -298,7 +299,10 @@ class MathEngine implements _MathEngine {
                 op.query  = `${String(i)} + ${String(j)}`;
                 op.answer = SUM;
 
-                if (!(await hasNegative([i, j, SUM]))) op.difficulty.push(BEGINNER);
+                if (await hasNegative([i, j, SUM]))
+                  op.difficulty.push(NEGATIVE);
+                else
+                  op.difficulty.push(BEGINNER, ADVANCED);
               break;
 
               case SUBSTRACTION:
@@ -307,7 +311,10 @@ class MathEngine implements _MathEngine {
                 op.answer = SUBTRAHEND;
             
                 // Assigning all possible difficulty levels //
-                if (!(await hasNegative([i, j, SUBTRAHEND]))) op.difficulty.push(BEGINNER);
+                if (await hasNegative([i, j, SUBTRAHEND]))
+                  op.difficulty.push(NEGATIVE);
+                else
+                  op.difficulty.push(BEGINNER, ADVANCED);
               break;
             
               case MULTIPLICATION:
@@ -316,7 +323,10 @@ class MathEngine implements _MathEngine {
                 op.answer = PRODUCT;
               
                 // Assigning all possible difficulty levels //
-                if (!(await hasNegative([i, j, PRODUCT]))) op.difficulty.push(INTERMEDIATE);
+                if (await hasNegative([i, j, PRODUCT]))
+                  op.difficulty.push(NEGATIVE);
+                else
+                  op.difficulty.push(INTERMEDIATE, ADVANCED);
               break;
               
               case DIVISION:
@@ -326,13 +336,15 @@ class MathEngine implements _MathEngine {
                   op.answer = QUOTIEN;
                 
                   // Assigning all possible difficulty levels //
-                  if (!(await hasNegative([i, j, QUOTIEN]))) op.difficulty.push(INTERMEDIATE);
+                  if (await hasNegative([i, j, QUOTIEN]))
+                    op.difficulty.push(NEGATIVE);
+                  else
+                    op.difficulty.push(INTERMEDIATE, ADVANCED);
                 }
               break;
             }
               
             if (op.query !== ``) {
-              if (op.difficulty.length) op.difficulty.push(ADVANCED);
               op.difficulty.push(EXPERT);
 
               MathTables.set(keyIndex, { difficulty: op.difficulty, query: op.query, answer: op.answer });
@@ -385,28 +397,38 @@ class MathEngine implements _MathEngine {
    * 
    */
   async generateRound(level :DifficultyLevel = this._difficultyLevels._BEGINNER, amount :number = 10) {
-    const [BEGINNER, INTERMEDIATE, ADVANCED, EXPERT] = this.difficultyLevels;
+    //const [BEGINNER, INTERMEDIATE, ADVANCED, EXPERT] = this.difficultyLevels;
 
-    let   round           = new Map<number, _MathTable>();
+    let   round     :Map<number, _MathTable>  = new Map<number, _MathTable>();
+    let   tmpBuffer :number[]                 = [];
+    
     const operationsList  = await this.getOperations(level);
-
-    let   tmpBuffer :number[] = [];
+    const operationsKeys  = operationsList.keys();
 
     try {
+      if (!operationsList.size) 
+        throw Error(`PROGRAMMING ERROR : no operations found for level : ${level}.`);
+
       for (let i = 1; i <= amount; i++) {
         let GO    :boolean  = false;
         let rndOp :number   = 0;
+        Array.from(operationsList);
 
         do {
           rndOp = Math.floor(Math.random() * operationsList.size) + 1;
           if (!tmpBuffer.includes(rndOp)) {
-            tmpBuffer.push(rndOp);
             GO = true;
           }
         } while(GO !== true);
+        
+        // Once the element position retrieved, need to get its key //
+        // STUCKED HERE //
 
+        //round.set(Number(operationsKeys[rndOp]), operationsList.get(Number(operationsKeys[rndOp])));
+        tmpBuffer.push(rndOp);
       }
       console.log(tmpBuffer);
+      console.log(round);
       
       return Promise.resolve(round);
     } catch(error) {

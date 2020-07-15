@@ -15,20 +15,21 @@ const SUBSTRACTION        :number = 1;
 const MULTIPLICATION      :number = 2;
 const DIVISION            :number = 3;
 
-const _BEGINNER            :number  = 100;
-const _INTERMEDIATE        :number  = 200;
-const _ADVANCED            :number  = 300;
-const _EXPERT              :number  = 400;
+const _BEGINNER           :number = 100;
+const _INTERMEDIATE       :number = 200;
+const _ADVANCED           :number = 300;
+const _EXPERT             :number = 400;
+const _NEGATIVE_ONLY      :number = 500;
 
 const OPERAND_FROM        :number = -12;
 const OPERAND_TO          :number = 12;
 const TABLE_FROM          :number = -12;
 const TABLE_TO            :number = 12;
 
-const TABLESSETTINGS  = [OPERAND_FROM, OPERAND_TO, TABLE_FROM, TABLE_TO];
-const OPERATORSLIST   = [ADDITION, SUBSTRACTION, MULTIPLICATION, DIVISION];
-
-const TOTALOPERATIONS = { BEGINNER: 260, INTERMEDIATE: 216, ADVANCED: 476, EXPERT: 2039 };
+const TABLESSETTINGS    = [OPERAND_FROM, OPERAND_TO, TABLE_FROM, TABLE_TO];
+const OPERATORSLIST     = [ADDITION, SUBSTRACTION, MULTIPLICATION, DIVISION];
+const DIFFICULTYLEVELS  = [_BEGINNER, _INTERMEDIATE, _ADVANCED, _EXPERT, _NEGATIVE_ONLY];
+const TOTALOPERATIONS   = { BEGINNER: 260, INTERMEDIATE: 216, ADVANCED: 476, EXPERT: 2039, NEGATIVE: 1563 };
 
 describe('MathEngine object testing', () => {
   it('is expected to read TRUE from property isAccessible', () => {
@@ -41,6 +42,10 @@ describe('MathEngine object testing', () => {
 
   it(`is expected to read operators list values as : [ADDITION, SUBSTRACTION, MULTIPLICATION, DIVISION]`, () => {
     expect(mathEngine.operatorsList).to.eql(OPERATORSLIST);
+  });
+
+  it(`is expected to read diff. levels list values as : [BEGINNER, INTERMEDIATE, ADVANCED, EXPERT, NEGATIVE_ONLY]`, () => {
+    expect(mathEngine.difficultyLevels).to.eql(DIFFICULTYLEVELS);
   });
 
   it(`is expected to successfully generate a Map() OBJECT with all math tables`, async () => {
@@ -73,16 +78,24 @@ describe('MathEngine object testing', () => {
     });
   });
 
-  it(`is expected to read ${TOTALOPERATIONS.ADVANCED} operations for anvanced`, async () => {
+  it(`is expected to read ${TOTALOPERATIONS.ADVANCED} operations for advanced`, async () => {
     return mathEngine.getOperations(_ADVANCED)
     .then(results => {
       expect(results.size).to.equal(TOTALOPERATIONS.ADVANCED);
     });
   });
+
   it(`is expected to read ${TOTALOPERATIONS.EXPERT} operations for experts`, async () => {
     return mathEngine.getOperations(_EXPERT)
     .then(results => {
       expect(results.size).to.equal(TOTALOPERATIONS.EXPERT);
+    });
+  });
+
+  it(`is expected to read ${TOTALOPERATIONS.NEGATIVE} operations for negative only`, async () => {
+    return mathEngine.getOperations(_NEGATIVE_ONLY)
+    .then(results => {
+      expect(results.size).to.equal(TOTALOPERATIONS.NEGATIVE);
     });
   });
 
