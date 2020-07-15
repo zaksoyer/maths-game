@@ -357,7 +357,7 @@ class MathEngine implements _MathEngine {
    * @method  generateRound generating arithmetic operations for a round.
    * @version 0.0.1a 2020-07-01
    * 
-   * @param   level   a number representing the difficulty level (Default EXPERT).
+   * @param   level   a number representing the difficulty level (Default BEGINNER).
    * @param   amount  a number reprsenting the amount of operation required (default 10).
    * 
    * @returns promise object with an array containing the list of operation.
