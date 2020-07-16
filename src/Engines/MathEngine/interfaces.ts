@@ -1,4 +1,4 @@
-import { Errorlevel } from '../../Custom_Modules/types';
+import { Errorlevel } from './types';
 
 interface _DifficultyLevels {
   _BEGINNER       :number;

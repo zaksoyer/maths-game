@@ -5,16 +5,16 @@
  */
 // Loading from custom modules //
 import { Errorlevels }  from '../../Classes'
-import { TrapError }    from '../../Custom_Modules/TrapError';
+import { TrapError }    from './modules/TrapError';
 
-import { DifficultyLevel, Errorlevel }   from '../../Custom_Modules/types';
+import { DifficultyLevel, Errorlevel }   from './types';
 import { _DifficultyLevels, _MathEngine, _MathTable, _MathTablesSettings, _OperatorsList, _RoundList } from './interfaces';
 
 const _BEGINNER       :number = 100;  // Additions & substractions, positive operands and results.
 const _INTERMEDIATE   :number = 200;  // Multiplication and divisions,  positive operands and results.
 const _ADVANCED       :number = 300;  // All, positive operands and results, reversed questions.
 const _EXPERT         :number = 400;  // All, negative operands and results, reversed questions.
-const _NEGATIVE_ONLY  :number = 500;  // Negative operands and results only
+const _NEGATIVE_ONLY  :number = 500;  // Negative operands and results only, reversed questions.
 
 // Initializing constant and variables //
 const DIFFICULTY_LEVELS :_DifficultyLevels = {
@@ -274,6 +274,12 @@ class MathEngine implements _MathEngine {
    *  
    */
   async generateMathTables() :Promise<Errorlevel> {
+    // BEGINNER       Additions & substractions, positive operands and results.
+    // INTERMEDIATE   Multiplication and divisions,  positive operands and results.
+    // ADVANCED       All, positive operands and results, reversed questions.
+    // EXPERT         All, negative operands and results, reversed questions.
+    // NEGATIVE_ONLY  Negative operands and results only, reversed questions.
+    
     const MathTables    = this._MathTables;
     const OPERATORS     = this.operatorsList;
 
@@ -299,6 +305,7 @@ class MathEngine implements _MathEngine {
                 op.query  = `${String(i)} + ${String(j)}`;
                 op.answer = SUM;
 
+                // Assigning some of the difficulty levels //
                 if (await hasNegative([i, j, SUM]))
                   op.difficulty.push(NEGATIVE);
                 else
@@ -310,7 +317,7 @@ class MathEngine implements _MathEngine {
                 op.query  = `${String(i)} - ${String(j)}`;
                 op.answer = SUBTRAHEND;
             
-                // Assigning all possible difficulty levels //
+                // Assigning some of the difficulty levels //
                 if (await hasNegative([i, j, SUBTRAHEND]))
                   op.difficulty.push(NEGATIVE);
                 else
@@ -322,7 +329,7 @@ class MathEngine implements _MathEngine {
                 op.query  = `${String(i)} * ${String(j)}`;
                 op.answer = PRODUCT;
               
-                // Assigning all possible difficulty levels //
+                  // Assigning some of the difficulty levels //
                 if (await hasNegative([i, j, PRODUCT]))
                   op.difficulty.push(NEGATIVE);
                 else
@@ -330,12 +337,13 @@ class MathEngine implements _MathEngine {
               break;
               
               case DIVISION:
+                // No remainder allowed in the answers //
                 if((i % j) === 0) { 
                   const QUOTIEN = i / j;
                   op.query  = `${String(i)} / ${String(j)}`;
                   op.answer = QUOTIEN;
                 
-                  // Assigning all possible difficulty levels //
+                  // Assigning some of the difficulty levels //
                   if (await hasNegative([i, j, QUOTIEN]))
                     op.difficulty.push(NEGATIVE);
                   else
@@ -345,7 +353,11 @@ class MathEngine implements _MathEngine {
             }
               
             if (op.query !== ``) {
+              // All operations go in expert level //
               op.difficulty.push(EXPERT);
+
+              // Zero has to be unsigned //
+              if (op.answer === -0) op.answer = 0;
 
               MathTables.set(keyIndex, { difficulty: op.difficulty, query: op.query, answer: op.answer });
 
@@ -374,16 +386,17 @@ class MathEngine implements _MathEngine {
    * 
    * @returns promise object with an array containing the list of operation.
    * 
-   * @todo  review pseudocode and coding
+   * @todo  review pseudocode, +store round's list +validate list not created in last 100
    */
   /*
    * Processing : retrive operations list for the difficulty level specified
    *                (default beginner);
-   *              generate an amount of unique random numbers between 1 and the total size
-   *                of the operations list previously retrieved.  The amount to generate is
+   *              generate an amount of unique random numbers inbetween the total size of
+   *                the operations list previously retrieved.  The amount to generate is
    *                determinated by the parameter sent by the requester (default 10);
-   *              retrieve all operation at position corresponding to each random numbers
-   *                generated and build a as a value list to return.              
+   *              read the operation at position corresponding to each random numbers
+   *                generated and add it to the round' list.
+   *              return the list once fully generated.
    *
    * Exceptions : When programming error
    *                Print error messages in screen and file
@@ -397,40 +410,47 @@ class MathEngine implements _MathEngine {
    * 
    */
   async generateRound(level :DifficultyLevel = this._difficultyLevels._BEGINNER, amount :number = 10) {
-    //const [BEGINNER, INTERMEDIATE, ADVANCED, EXPERT] = this.difficultyLevels;
 
-    let   round     :Map<number, _MathTable>  = new Map<number, _MathTable>();
+    let   roundList :Map<number, _MathTable>  = new Map<number, _MathTable>();
     let   tmpBuffer :number[]                 = [];
     
     const operationsList  = await this.getOperations(level);
-    const operationsKeys  = operationsList.keys();
+    const operationsKeys  = Array.from(operationsList.keys());
 
     try {
+      // The integrity tests are succeeded when operations are retrieved, keys are      //
+      // extracted and there are as many keys as there are operations. //
       if (!operationsList.size) 
         throw Error(`PROGRAMMING ERROR : no operations found for level : ${level}.`);
 
+      if (!operationsKeys.length) 
+        throw Error(`PROGRAMMING ERROR : no keys retrieved from operationsList.`);
+
+      if (!(operationsKeys.length === operationsList.size -1)) 
+        throw Error(`PROGRAMMING ERROR : operationsList.size doesn't match operationsKeys.length.`);
+
+      // Integrity tests succeeded //
       for (let i = 1; i <= amount; i++) {
         let GO    :boolean  = false;
         let rndOp :number   = 0;
-        Array.from(operationsList);
 
+        // Keys list is used since this the key of the operation is needed.             //
+        // NO DOUBLING ALLOWED.  Once validated, the random number is stored for        //
+        // further validations during the process. //
         do {
-          rndOp = Math.floor(Math.random() * operationsList.size) + 1;
+          rndOp = Math.floor(Math.random() * operationsKeys.length);
           if (!tmpBuffer.includes(rndOp)) {
+            tmpBuffer.push(rndOp);
             GO = true;
           }
         } while(GO !== true);
         
-        // Once the element position retrieved, need to get its key //
-        // STUCKED HERE //
-
-        //round.set(Number(operationsKeys[rndOp]), operationsList.get(Number(operationsKeys[rndOp])));
-        tmpBuffer.push(rndOp);
+        roundList.set(Number(operationsKeys[rndOp]), operationsList.get(Number(operationsKeys[rndOp])));
       }
-      console.log(tmpBuffer);
-      console.log(round);
       
-      return Promise.resolve(round);
+      // Resolving the promise means it's a success //
+      return Promise.resolve(roundList);
+
     } catch(error) {
       TrapError('mathEngine.generateTables()', error);
     };
@@ -439,15 +459,14 @@ class MathEngine implements _MathEngine {
 
 /**
  * @private @readonly 
- * @function hasNegative  returning if a value is negative.
- * @version 0.0.1bravo  2020-07-13.
- * @param   check array of number to scan.
- * @returns a promise object containing true or false.
+ * @function  hasNegative  returning if one of the values passed is negative.
+ * @version   0.0.1bravo  2020-07-13.
+ * @param     check array of number to scan.
+ * @returns   a promise object containing true or false.
  */
 /*
  * Processing : This function scans the entire operation for any negative value.  It
- *              resolves a promise object containing 'false' immediately if one is found.
- *              Otherwise, it returns true.
+ *              returns 'false' immediately if one is found.  Otherwise, it returns true.
  * 
  * Exceptions : When programming error
  *                Print error messages in screen and file

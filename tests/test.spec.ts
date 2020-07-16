@@ -3,17 +3,17 @@ import { expect } from 'chai';
 
 import { MathEngine }   from '../src/Engines/MathEngine';
 import { Errorlevels }  from '../src/Classes/Errorlevels';
-import { Errorlevel }   from '../src/Custom_Modules/types';
+import { DifficultyLevel, Errorlevel }   from '../src/Engines/MathEngine/types';
 
 const mathEngine          :MathEngine   = new MathEngine();
 const totalMathOperations :number       = 2039;
 const EXIT                :Errorlevels  = new Errorlevels();
 const SUCCESS             :Errorlevel   = EXIT.Success;
 
-const ADDITION            :number = 0;
-const SUBSTRACTION        :number = 1;
-const MULTIPLICATION      :number = 2;
-const DIVISION            :number = 3;
+const _ADDITION            :number = 0;
+const _SUBSTRACTION        :number = 1;
+const _MULTIPLICATION      :number = 2;
+const _DIVISION            :number = 3;
 
 const _BEGINNER           :number = 100;
 const _INTERMEDIATE       :number = 200;
@@ -21,13 +21,13 @@ const _ADVANCED           :number = 300;
 const _EXPERT             :number = 400;
 const _NEGATIVE_ONLY      :number = 500;
 
-const OPERAND_FROM        :number = -12;
-const OPERAND_TO          :number = 12;
-const TABLE_FROM          :number = -12;
-const TABLE_TO            :number = 12;
+const _OPERAND_FROM        :number = -12;
+const _OPERAND_TO          :number = 12;
+const _TABLE_FROM          :number = -12;
+const _TABLE_TO            :number = 12;
 
-const TABLESSETTINGS    = [OPERAND_FROM, OPERAND_TO, TABLE_FROM, TABLE_TO];
-const OPERATORSLIST     = [ADDITION, SUBSTRACTION, MULTIPLICATION, DIVISION];
+const TABLESSETTINGS    = [_OPERAND_FROM, _OPERAND_TO, _TABLE_FROM, _TABLE_TO];
+const OPERATORSLIST     = [_ADDITION, _SUBSTRACTION, _MULTIPLICATION, _DIVISION];
 const DIFFICULTYLEVELS  = [_BEGINNER, _INTERMEDIATE, _ADVANCED, _EXPERT, _NEGATIVE_ONLY];
 const TOTALOPERATIONS   = { BEGINNER: 260, INTERMEDIATE: 216, ADVANCED: 476, EXPERT: 2039, NEGATIVE: 1563 };
 
@@ -99,5 +99,76 @@ describe('MathEngine object testing', () => {
     });
   });
 
+  it(`is expected to return 10 operations with beginner level flag `, async () => {
+    return mathEngine.generateRound()
+    .then(async results => {
+      expect(await opsHaveFlag(results, _BEGINNER)).to.be.true;
+      expect(results.size).to.equal(10);
+    });
+  });
+
+  it(`is expected to return 15 operations with beginner level flag`, async () => {
+    return mathEngine.generateRound(_BEGINNER, 15)
+    .then(async results => {
+      expect(await opsHaveFlag(results, _BEGINNER)).to.be.true;
+      expect(results.size).to.equal(15);
+    });
+  });
+
+  it(`is expected to return 10 operations with intermediate level flag`, async () => {
+    return mathEngine.generateRound(_INTERMEDIATE)
+    .then(async results => {
+      expect(await opsHaveFlag(results, _INTERMEDIATE)).to.be.true;
+      expect(results.size).to.equal(10);
+    });
+  });
+
+  it(`is expected to return 10 operations with advanced level flag`, async () => {
+    return mathEngine.generateRound(_ADVANCED)
+    .then(async results => {
+      expect(await opsHaveFlag(results, _ADVANCED)).to.be.true;
+      expect(results.size).to.equal(10);
+    });
+  });
+
+  it(`is expected to return 10 operations with expert level flag`, async () => {
+    return mathEngine.generateRound(_EXPERT)
+    .then(async results => {
+      expect(await opsHaveFlag(results, _EXPERT)).to.be.true;
+      expect(results.size).to.equal(10);
+    });
+  });
+
+  it(`is expected to return 10 operations with negative operands and/or answer level flag`, async () => {
+    return mathEngine.generateRound(_NEGATIVE_ONLY)
+    .then(async results => {
+      expect(await opsHaveFlag(results, _NEGATIVE_ONLY)).to.be.true;
+      expect(results.size).to.equal(10);
+    });
+  });
 });
 
+
+/**
+ * @private @readonly @async 
+ * @function opsHaveFlag validating operations in a round list has the required flag.
+ * 
+ * @param list list of operation to scan
+ * @param flag the flag to scan
+ * @returns a promise object with a boolean value.
+ */
+/*
+ * Processing : scan the list and breaks, returning false if one of the operation doesn't
+ *              have the flag.  Returns true if all have the flag.
+ * 
+ */
+async function opsHaveFlag(list :any, flag :DifficultyLevel) {
+
+  for (const element of list) {
+    if (!element[1].difficulty.includes(flag)) {
+      return Promise.resolve(false);
+    }
+  }
+
+  return Promise.resolve(true);
+}

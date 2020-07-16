@@ -1,5 +1,5 @@
-import { Errorlevels }  from '../Classes/Errorlevels';
-import { Errorlevel }   from './types';
+import { Errorlevels }  from '../../../Classes/Errorlevels';
+import { Errorlevel }   from '../types';
 
 const EXIT = new Errorlevels();
 
@@ -17,7 +17,7 @@ const SUCCESS = EXIT.Success;
 async function TrapError(where :string, error :any) :Promise<Errorlevel> { 
 
   console.error(`UNEXPECTED ERROR IN ${where}`, error);
-
+  process.kill(process.pid);
   return Promise.resolve(SUCCESS);
 }
 
